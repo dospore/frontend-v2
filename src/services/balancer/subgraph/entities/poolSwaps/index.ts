@@ -1,6 +1,7 @@
 import Service from '../../balancer-subgraph.service';
 import queryBuilder from './query';
 import { PoolSwap, QueryBuilder } from '../../types';
+import { unixToJsTime } from '@/lib/utils/date';
 
 export default class PoolSwaps {
   service: Service;
@@ -21,7 +22,7 @@ export default class PoolSwaps {
   serialize(swaps: PoolSwap[]) {
     return swaps.map(swap => ({
       ...swap,
-      timestamp: swap.timestamp * 1000
+      timestamp: unixToJsTime(swap.timestamp)
     }));
   }
 }

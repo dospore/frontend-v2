@@ -7,7 +7,7 @@
     :is-paginated="poolActivitiesHasNextPage"
     @load-more="loadMorePoolActivities"
     :no-results-label="
-      poolActivityType === PoolActivityTab.ALL_ACTIVITY
+      poolActivityType === PoolTransactionsTab.ALL_ACTIVITY
         ? $t('noTransactionsPool')
         : $t('noTransactionsUserPool')
     "
@@ -22,7 +22,7 @@ import Table from './Table.vue';
 import usePoolActivitiesQuery from '@/composables/queries/usePoolActivitiesQuery';
 import usePoolUserActivitiesQuery from '@/composables/queries/usePoolUserActivitiesQuery';
 import { FullPool } from '@/services/balancer/subgraph/types';
-import { PoolActivityTab } from '../types';
+import { PoolTransactionsTab } from '../types';
 
 export default defineComponent({
   components: {
@@ -39,8 +39,8 @@ export default defineComponent({
       default: false
     },
     poolActivityType: {
-      type: String as PropType<PoolActivityTab>,
-      default: PoolActivityTab.ALL_ACTIVITY
+      type: String as PropType<PoolTransactionsTab>,
+      default: PoolTransactionsTab.ALL_ACTIVITY
     }
   },
 
@@ -59,7 +59,7 @@ export default defineComponent({
      * QUERIES
      */
     const poolActivitiesQuery =
-      props.poolActivityType === PoolActivityTab.ALL_ACTIVITY
+      props.poolActivityType === PoolTransactionsTab.ALL_ACTIVITY
         ? usePoolActivitiesQuery(id)
         : usePoolUserActivitiesQuery(id);
 
@@ -104,7 +104,7 @@ export default defineComponent({
       // methods
       loadMorePoolActivities,
       // constants
-      PoolActivityTab
+      PoolTransactionsTab
     };
   }
 });

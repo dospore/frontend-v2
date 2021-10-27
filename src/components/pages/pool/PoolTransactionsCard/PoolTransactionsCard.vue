@@ -1,32 +1,5 @@
-<template>
-  <div
-    class="px-4 sm:px-0 flex justify-between items-end border-b dark:border-gray-900 mb-6"
-  >
-    <div class="">
-      <BalTabs v-model="activeTab" :tabs="tabs" no-pad class="-mb-px" />
-    </div>
-  </div>
-  <template v-if="activeTab === PoolActivityTab.ALL_ACTIVITY">
-    <Activities
-      :pool-activity-type="PoolActivityTab.ALL_ACTIVITY"
-      :pool="pool"
-      :loading="loading"
-    />
-  </template>
-  <template v-if="activeTab === PoolActivityTab.USER_ACTIVITY">
-    <Activities
-      :pool-activity-type="PoolActivityTab.USER_ACTIVITY"
-      :pool="pool"
-      :loading="loading"
-    />
-  </template>
-  <template v-if="activeTab === PoolActivityTab.SWAPS">
-    <Swaps :pool="pool" :loading="loading" />
-  </template>
-</template>
-
-<script lang="ts">
-import { defineComponent, PropType, ref } from 'vue';
+<script setup lang="ts">
+import { ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 
 import { FullPool } from '@/services/balancer/subgraph/types';
@@ -34,44 +7,49 @@ import { FullPool } from '@/services/balancer/subgraph/types';
 import Activities from './PoolActivities/Activities.vue';
 import Swaps from './PoolSwaps/Swaps.vue';
 
-import { PoolActivityTab } from './types';
+import { PoolTransactionsTab } from './types';
 
-export default defineComponent({
-  components: {
-    Activities,
-    Swaps
-  },
+const { t } = useI18n();
 
-  props: {
-    pool: {
-      type: Object as PropType<FullPool>,
-      required: true
-    },
-    loading: {
-      type: Boolean,
-      default: false
-    }
-  },
+type Props = {
+  pool: FullPool;
+  loading: boolean;
+};
 
-  setup() {
-    // COMPOSABLES
-    const { t } = useI18n();
+/**
+ * PROPS
+ */
+defineProps<Props>();
 
-    // DATA
-    const tabs = [
-      { value: PoolActivityTab.ALL_ACTIVITY, label: t('allTransactions') },
-      { value: PoolActivityTab.USER_ACTIVITY, label: t('myTransactions') },
-      { value: PoolActivityTab.SWAPS, label: 'swaps' }
-    ];
-    const activeTab = ref(tabs[0].value);
-
-    return {
-      // data
-      tabs,
-      activeTab,
-      // constants
-      PoolActivityTab
-    };
-  }
-});
+const tabs = [
+  { value: PoolTransactionsTab.ALL_ACTIVITY, label: t('allTransactions') },
+  { value: PoolTransactionsTab.USER_ACTIVITY, label: t('myTransactions') },
+  { value: PoolTransactionsTab.SWAPS, label: t('swaps') }
+];
+const activeTab = ref(tabs[0].value);
 </script>
+
+<template>
+  <div
+    class="px-4 sm:px-0 flex justify-between items-end border-b dark:border-gray-900 mb-6"
+  >
+    <BalTabs v-model="activeTab" :tabs="tabs" no-pad class="-mb-px" />
+  </div>
+  <template v-if="activeTab === PoolTransactionsTab.ALL_ACTIVITY">
+    <Activities
+      :pool-activity-type="PoolTransactionsTab.ALL_ACTIVITY"
+      :pool="pool"
+      :loading="loading"
+    />
+  </template>
+  <template v-if="activeTab === PoolTransactionsTab.USER_ACTIVITY">
+    <Activities
+      :pool-activity-type="PoolTransactionsTab.USER_ACTIVITY"
+      :pool="pool"
+      :loading="loading"
+    />
+  </template>
+  <template v-if="activeTab === PoolTransactionsTab.SWAPS">
+    <Swaps :pool="pool" :loading="loading" />
+  </template>
+</template>
