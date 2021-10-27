@@ -20,6 +20,9 @@
       :loading="loading"
     />
   </template>
+  <template v-if="activeTab === PoolActivityTab.SWAPS">
+    <Swaps :pool="pool" :loading="loading" />
+  </template>
 </template>
 
 <script lang="ts">
@@ -28,13 +31,15 @@ import { useI18n } from 'vue-i18n';
 
 import { FullPool } from '@/services/balancer/subgraph/types';
 
-import Activities from './Activities.vue';
+import Activities from './PoolActivities/Activities.vue';
+import Swaps from './PoolSwaps/Swaps.vue';
 
 import { PoolActivityTab } from './types';
 
 export default defineComponent({
   components: {
-    Activities
+    Activities,
+    Swaps
   },
 
   props: {
@@ -55,7 +60,8 @@ export default defineComponent({
     // DATA
     const tabs = [
       { value: PoolActivityTab.ALL_ACTIVITY, label: t('allTransactions') },
-      { value: PoolActivityTab.USER_ACTIVITY, label: t('myTransactions') }
+      { value: PoolActivityTab.USER_ACTIVITY, label: t('myTransactions') },
+      { value: PoolActivityTab.SWAPS, label: 'swaps' }
     ];
     const activeTab = ref(tabs[0].value);
 
